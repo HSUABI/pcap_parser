@@ -1,1 +1,1 @@
-int printarr(u_char* arr, int length );
+int printarr(unsigned char* arr, int length );

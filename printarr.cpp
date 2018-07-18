@@ -1,6 +1,7 @@
 #include "printarr.h"
+#include <stdio.h>
 
-int printarr(u_char* arr, int length )
+int printarr(unsigned char* arr, int length )
 {
 	int i;
 	for (int i = 0; i < length; ++i)
