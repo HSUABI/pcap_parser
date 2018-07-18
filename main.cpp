@@ -33,7 +33,10 @@ int main(int argc, char* argv[]) {
     ethernet = (struct sniff_ethernet*)packet;
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
-    printarr(ethernet->ether_dhost,6);
+    printf("Destination MacAddress\t:");
+    printarr(ethernet->ether_dhost,ETHER_ADDR_LEN);
+    printf("Source MacAddress\t:");
+    printarr(ethernet->ether_shost,ETHER_ADDR_LEN);
   }
 
   pcap_close(handle);
