@@ -10,6 +10,6 @@ main.o:
 	g++ -g -c -o main.o main.cpp
 
 clean:
-	rm -f pcap_test
+	rm -f pcap_parser
 	rm -f *.o
 
