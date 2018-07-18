@@ -1,5 +1,6 @@
 #include <pcap.h>
 #include <stdio.h>
+#include "protocol_structure.h"
 
 void usage() {
   printf("syntax: pcap_test <interface>\n");
