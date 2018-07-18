@@ -1,4 +1,5 @@
 /* Ethernet addresses are 6 bytes */
+#include <stdint.h>
 #define ETHER_ADDR_LEN	6
 
 	/* Ethernet header */
@@ -22,7 +23,8 @@
 		u_char ip_ttl;		/* time to live */
 		u_char ip_p;		/* protocol */
 		u_short ip_sum;		/* checksum */
-		struct in_addr ip_src,ip_dst; /* source and dest address */
+		uint32_t ip_src;
+		uint32_t ip_dst;	 /* source and dest address */
 	};
 	#define IP_HL(ip)		(((ip)->ip_vhl) & 0x0f)
 	#define IP_V(ip)		(((ip)->ip_vhl) >> 4)
