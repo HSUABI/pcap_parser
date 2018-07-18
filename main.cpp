@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     ethernet = (struct sniff_ethernet*)packet;
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
-    printf("packet is : %x %x %x %x %x\n", ethernet->ether_dhost[0],ethernet->ether_dhost[1], ethernet->ether_dhost[2],ethernet->ether_dhost[3],ethernet->ether_dhost[4]);
+    printarr(ethernet->ether_dhost,6);
   }
 
   pcap_close(handle);
