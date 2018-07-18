@@ -1,0 +1,1 @@
+int ip_check(unsigned short type);
