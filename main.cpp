@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "protocol_structure.h"
 #include "printarr.h"
+#include "protocol_check.h"
 
 void usage() {
   printf("syntax: pcap_test <interface>\n");
@@ -37,6 +38,9 @@ int main(int argc, char* argv[]) {
     printarr(ethernet->ether_dhost,ETHER_ADDR_LEN);
     printf("Source MacAddress\t:");
     printarr(ethernet->ether_shost,ETHER_ADDR_LEN);
+    printf("Ether Type\t:%hu\n",ethernet->ether_type);
+    if(ip_check(ethernet->ether_type))  printf("It is IP TYPE\n");
+
   }
 
   pcap_close(handle);
