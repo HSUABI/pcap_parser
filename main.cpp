@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     int res = pcap_next_ex(handle, &header, &packet);
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
-    printf("%u bytes captured\n", header->caplen);
+    printf("packet is : %x %x %x %x %x\n", *(packet),*(packet+1),*(packet+2),*(packet+3),*(packet+4));
   }
 
   pcap_close(handle);
