@@ -16,13 +16,6 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
-  struct sniff_ethernet *ethernet;
-  struct sniff_ip *ip;
-  struct sniff_tcp *tcp;
-  u_int size_ip;
-  u_int size_tcp;
-  u_char* data;
-
   char* dev = argv[1];
   char errbuf[PCAP_ERRBUF_SIZE];
   pcap_t* handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
@@ -35,6 +28,14 @@ int main(int argc, char* argv[]) {
     struct pcap_pkthdr* header;
     const u_char* packet;
     int res = pcap_next_ex(handle, &header, &packet);
+
+    // My variables , structures 
+   struct sniff_ethernet *ethernet;
+   struct sniff_ip *ip;
+   struct sniff_tcp *tcp;
+    u_int size_ip;
+    u_int size_tcp;
+    u_char* data;
     ethernet = (struct sniff_ethernet*)packet;
     ip = (struct sniff_ip*)(packet+ETHER_LEN);
     size_ip = IP_HL(ip)*4; 
@@ -44,25 +45,22 @@ int main(int argc, char* argv[]) {
 
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
-    printf("Destination MacAddress\t:");
-    printarr(ethernet->ether_dhost,ETHER_ADDR_LEN);
-    printf("Source MacAddress\t:");
-    printarr(ethernet->ether_shost,ETHER_ADDR_LEN);
     
-    if(ip_check(ethernet->ether_type))
+    if(ip_check(ethernet->ether_type)
+      && tcp_check(ip->ip_p))
     {
-      printf("source ip\t:%x\n",ip->ip_src);
-      printf("destination ip\t:%x\n",ip->ip_dst);
-      if(tcp_check(ip->ip_p))
-      {
-        printf("source port\t:%hu\n",tcp->th_sport);
-        printf("destination port\t:%hu\n",tcp->th_dport);
-        printarr(data,16);
-      }
-      
+      printf("Destination MacAddress\t:");
+      printarr(ethernet->ether_dhost,ETHER_ADDR_LEN);
+      printf("Source MacAddress\t:");
+      printarr(ethernet->ether_shost,ETHER_ADDR_LEN);
+      printf("source ip\t\t:%x\n",ip->ip_src);
+      printf("destination ip\t\t:%x\n",ip->ip_dst);
+      printf("source port\t\t:%hu\n",tcp->th_sport);
+      printf("destination port\t:%hu\n",tcp->th_dport);
+      printf("Data\t\t\t:");
+      printarr(data,16);
+      printf("\n");
     }
-    
-
   }
 
   pcap_close(handle);
