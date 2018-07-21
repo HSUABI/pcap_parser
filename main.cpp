@@ -7,6 +7,7 @@
 #include "hex_to_ip.h"
 #define ETHER_LEN 14
 
+
 void usage() {
   printf("syntax: pcap_test <interface>\n");
   printf("sample: pcap_test wlan0\n");
@@ -51,7 +52,7 @@ int main(int argc, char* argv[]) {
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
     
-    if(ip_check(ethernet->ether_type)
+    if(ip_check(swap_word_endian(ethernet->ether_type))
       && tcp_check(ip->ip_p))
     {
       printf("Destination MacAddress\t:");
