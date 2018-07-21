@@ -20,6 +20,8 @@ int main(int argc, char* argv[]) {
   struct sniff_ip *ip;
   struct sniff_tcp *tcp;
   u_int size_ip;
+  u_int size_tcp;
+  u_char* data;
 
   char* dev = argv[1];
   char errbuf[PCAP_ERRBUF_SIZE];
@@ -37,7 +39,9 @@ int main(int argc, char* argv[]) {
     ip = (struct sniff_ip*)(packet+ETHER_LEN);
     size_ip = IP_HL(ip)*4; 
     tcp = (struct sniff_tcp*)(packet+ETHER_LEN+size_ip);
-    
+    size_tcp = TH_OFF(tcp)*4;
+    data = (u_char*)(packet+ETHER_LEN+size_ip+size_tcp);
+
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
     printf("Destination MacAddress\t:");
@@ -53,6 +57,7 @@ int main(int argc, char* argv[]) {
       {
         printf("source port\t:%hu\n",tcp->th_sport);
         printf("destination port\t:%hu\n",tcp->th_dport);
+        printarr(data,16);
       }
       
     }
