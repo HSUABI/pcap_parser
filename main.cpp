@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
     ethernet = (struct sniff_ethernet*)packet;
     ip = (struct sniff_ip*)(packet+ETHER_LEN);
     size_ip = IP_HL(ip)*4; 
+    tcp = (struct sniff_tcp*)(packet+ETHER_LEN+size_ip);
     
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
@@ -46,11 +47,14 @@ int main(int argc, char* argv[]) {
     
     if(ip_check(ethernet->ether_type))
     {
-
       printf("source ip\t:%x\n",ip->ip_src);
-      printf("source ip\t:%x\n",ip->ip_dst);
-
-      //if(tcp_check(ip->ip_p)) printf("it is tcp\n");
+      printf("destination ip\t:%x\n",ip->ip_dst);
+      if(tcp_check(ip->ip_p))
+      {
+        printf("source port\t:%hu\n",tcp->th_sport);
+        printf("destination port\t:%hu\n",tcp->th_dport);
+      }
+      
     }
     
 
