@@ -3,6 +3,7 @@
 #include "protocol_structure.h"
 #include "printarr.h"
 #include "protocol_check.h"
+#include "swap_endian.h"
 #define ETHER_LEN 14
 
 void usage() {
@@ -43,6 +44,7 @@ int main(int argc, char* argv[]) {
     size_tcp = TH_OFF(tcp)*4;
     data = (u_char*)(packet+ETHER_LEN+size_ip+size_tcp);
 
+
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
     
@@ -55,8 +57,8 @@ int main(int argc, char* argv[]) {
       printarr(ethernet->ether_shost,ETHER_ADDR_LEN);
       printf("source ip\t\t:%x\n",ip->ip_src);
       printf("destination ip\t\t:%x\n",ip->ip_dst);
-      printf("source port\t\t:%hu\n",tcp->th_sport);
-      printf("destination port\t:%hu\n",tcp->th_dport);
+      printf("source port\t\t:%hu\n",swap_word_endian(tcp->th_sport));
+      printf("destination port\t:%hu\n",swap_word_endian(tcp->th_dport));
       printf("Data\t\t\t:");
       printarr(data,16);
       printf("\n");
