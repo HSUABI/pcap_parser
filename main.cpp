@@ -38,6 +38,7 @@ int main(int argc, char* argv[]) {
    struct sniff_tcp *tcp;
     u_int size_ip;
     u_int size_tcp;
+    u_int size_data;
     u_char* data;
     ethernet = (struct sniff_ethernet*)packet;
     ip = (struct sniff_ip*)(packet+ETHER_LEN);
@@ -59,8 +60,8 @@ int main(int argc, char* argv[]) {
       printarr(ethernet->ether_dhost,ETHER_ADDR_LEN);
       printf("Source MacAddress\t:");
       printarr(ethernet->ether_shost,ETHER_ADDR_LEN);
-
-
+      printf("Total length\t\t:%2hu\n",swap_word_endian(ip->ip_len));
+      
       hex_to_ip(ip->ip_src,ip_src_str);   // Change hex value to readable ip
       hex_to_ip(ip->ip_dst,ip_dst_str);   // Change hex value to readable ip
 
@@ -68,8 +69,17 @@ int main(int argc, char* argv[]) {
       printf("destination ip\t\t:%s\n",ip_dst_str);
       printf("source port\t\t:%hu\n",swap_word_endian(tcp->th_sport));
       printf("destination port\t:%hu\n",swap_word_endian(tcp->th_dport));
-      printf("Data\t\t\t:");
-      printarr(data,16);
+    
+      size_data = swap_word_endian(ip->ip_len)-size_ip-size_tcp;
+      printf("data length\t\t:%2hu\n",size_data);
+
+      if(size_data > 0)
+      {
+        printf("Data\t\t\t:");
+        printarr(data,size_data > 16 ? 16 : size_data );
+      }
+      else  printf("No data\n");
+
       printf("\n");
     }
   }
