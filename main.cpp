@@ -27,28 +27,30 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
-  while (true) {
-    struct pcap_pkthdr* header;
-    const u_char* packet;
-    int res = pcap_next_ex(handle, &header, &packet);
+  //Default variables
+  struct pcap_pkthdr* header;
+  const u_char* packet;
+  int res;
 
-    // My variables , structures 
-   struct sniff_ethernet *ethernet;
-   struct sniff_ip *ip;
-   struct sniff_tcp *tcp;
-    u_int size_ip;
-    u_int size_tcp;
-    u_int size_data;
-    u_char* data;
+  // My variables , structures 
+  struct sniff_ethernet *ethernet;
+  struct sniff_ip *ip;
+  struct sniff_tcp *tcp;
+  u_int size_ip;
+  u_int size_tcp;
+  u_int size_data;
+  u_char* data;
+  char ip_src_str[16];    // readable ip 
+  char ip_dst_str[16];    // readable ip
+
+  while (true) {
+    pcap_next_ex(handle, &header, &packet);
     ethernet = (struct sniff_ethernet*)packet;
     ip = (struct sniff_ip*)(packet+ETHER_LEN);
     size_ip = IP_HL(ip)*4; 
     tcp = (struct sniff_tcp*)(packet+ETHER_LEN+size_ip);
     size_tcp = TH_OFF(tcp)*4;
     data = (u_char*)(packet+ETHER_LEN+size_ip+size_tcp);
-    char ip_src_str[16];    // readable ip 
-    char ip_dst_str[16];    // readable ip
-
 
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
